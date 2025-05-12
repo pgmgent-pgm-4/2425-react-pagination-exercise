@@ -1,4 +1,12 @@
-export function Pagination({ currentPage, pageCount, onPageChanged }) {
+import { PAGE_SIZE_OPTIONS } from "../../../../constants/constants";
+
+export function Pagination({
+  currentPage,
+  pageCount,
+  pageSize,
+  onPageChanged,
+  onPageSizeChanged,
+}) {
   let pageNumberArray;
 
   if (pageCount <= 6) {
@@ -71,6 +79,20 @@ export function Pagination({ currentPage, pageCount, onPageChanged }) {
       >
         Next page
       </button>
+      <div class="select" style={{ marginRight: "2rem" }}>
+        <select
+          defaultValue={pageSize}
+          onChange={(event) => onPageSizeChanged(event.target.value)}
+        >
+          {PAGE_SIZE_OPTIONS.map((pageSizeOption) => {
+            return (
+              <option value={pageSizeOption} key={pageSizeOption}>
+                {pageSizeOption} items per page
+              </option>
+            );
+          })}
+        </select>
+      </div>
       <ul className="pagination-list">{pageLinks}</ul>
     </nav>
   );
