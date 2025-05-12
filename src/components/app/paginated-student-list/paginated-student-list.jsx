@@ -5,9 +5,8 @@ import { Pagination } from "./pagination/pagination";
 
 export function PaginatedStudentList() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
   const [students, setStudents] = useState([]);
-
-  const pageCount = 86;
 
   function handlePageChanged(pageNumber) {
     setCurrentPage(pageNumber);
@@ -16,6 +15,7 @@ export function PaginatedStudentList() {
   useEffect(() => {
     fetchStudents(currentPage).then((fetchedStudents) => {
       setStudents(fetchedStudents.data);
+      setPageCount(fetchedStudents.meta.pagination.pageCount);
     });
   }, [currentPage]);
 
