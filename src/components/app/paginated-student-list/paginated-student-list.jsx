@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchStudents } from "../../../data/fetchStudents";
 import { StudentList } from "./student-list/student-list";
 import { Pagination } from "./pagination/pagination";
 
@@ -12,7 +13,11 @@ export function PaginatedStudentList() {
     setCurrentPage(pageNumber);
   }
 
-  // Up to you to use useEffect properly here
+  useEffect(() => {
+    fetchStudents(currentPage).then((fetchedStudents) => {
+      setStudents(fetchedStudents.data);
+    });
+  }, [currentPage]);
 
   return (
     <>
