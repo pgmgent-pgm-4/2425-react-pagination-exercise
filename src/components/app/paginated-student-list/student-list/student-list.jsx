@@ -1,3 +1,13 @@
 export function StudentList({ students }) {
-  // TO DO
+  return (
+    <ul>
+      {students.map((student) => {
+        return (
+          <li key={student.id}>
+            {student.firstName} {student.lastName}
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
