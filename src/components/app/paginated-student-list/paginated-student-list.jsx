@@ -3,6 +3,7 @@ import { fetchStudents } from "../../../data/fetchStudents";
 import { StudentList } from "./student-list/student-list";
 import { Pagination } from "./pagination/pagination";
 import { PAGE_SIZE_OPTIONS } from "../../../constants/constants";
+import { useQuery } from "@tanstack/react-query";
 
 export function PaginatedStudentList() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,15 +19,30 @@ export function PaginatedStudentList() {
     setPageSize(size);
   }
 
+  const { isPending, isError, error, data } = useQuery({
+    queryKey: ["students", { currentPage, pageSize }],
+    queryFn: () => fetchStudents(currentPage, pageSize),
+  });
+
   useEffect(() => {
-    fetchStudents(currentPage, pageSize).then((fetchedStudents) => {
-      if (currentPage > fetchedStudents.meta.pagination.pageCount) {
-        setCurrentPage(fetchedStudents.meta.pagination.pageCount);
+    if (data) {
+      if (currentPage > data.meta.pagination.pageCount) {
+        setCurrentPage(data.meta.pagination.pageCount);
       }
-      setStudents(fetchedStudents.data);
-      setPageCount(fetchedStudents.meta.pagination.pageCount);
-    });
-  }, [currentPage, pageSize]);
+      setStudents(data.data);
+      setPageCount(data.meta.pagination.pageCount);
+    }
+  }, [data, currentPage]);
+
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
+
+  // At this point we can assume data is not falsy
 
   return (
     <>
